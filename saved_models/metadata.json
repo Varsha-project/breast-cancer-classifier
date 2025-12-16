@@ -1,0 +1,105 @@
+{
+    "dataset": "Breast Cancer Wisconsin",
+    "target_names": [
+        "Malignant",
+        "Benign"
+    ],
+    "features": [
+        "mean radius",
+        "mean texture",
+        "mean perimeter",
+        "mean area",
+        "mean smoothness",
+        "mean compactness",
+        "mean concavity",
+        "mean concave points",
+        "mean symmetry",
+        "mean fractal dimension",
+        "radius error",
+        "texture error",
+        "perimeter error",
+        "area error",
+        "smoothness error",
+        "compactness error",
+        "concavity error",
+        "concave points error",
+        "symmetry error",
+        "fractal dimension error",
+        "worst radius",
+        "worst texture",
+        "worst perimeter",
+        "worst area",
+        "worst smoothness",
+        "worst compactness",
+        "worst concavity",
+        "worst concave points",
+        "worst symmetry",
+        "worst fractal dimension"
+    ],
+    "best_model": "Logistic Regression",
+    "best_recall": 0.9861111111111112,
+    "best_accuracy": 0.9824561403508771,
+    "best_precision": 0.9861111111111112,
+    "best_f1": 0.9861111111111112,
+    "creation_date": "2025-12-16 15:45:26",
+    "model_info": {
+        "Logistic Regression": {
+            "type": "LogisticRegression",
+            "parameters": "{'C': 1.0, 'class_weight': None, 'dual': False, 'fit_intercept': True, 'intercept_scaling': 1, 'l1_ratio': None, 'max_iter': 1000, 'multi_class': 'deprecated', 'n_jobs': None, 'penalty': 'l2', 'random_state': 42, 'solver': 'lbfgs', 'tol': 0.0001, 'verbose': 0, 'warm_start': False}"
+        },
+        "KNN": {
+            "type": "KNeighborsClassifier",
+            "parameters": "{'algorithm': 'auto', 'leaf_size': 30, 'metric': 'minkowski', 'metric_params': None, 'n_jobs': None, 'n_neighbors': 5, 'p': 2, 'weights': 'uniform'}"
+        },
+        "Decision Tree": {
+            "type": "DecisionTreeClassifier",
+            "parameters": "{'ccp_alpha': 0.0, 'class_weight': None, 'criterion': 'gini', 'max_depth': 5, 'max_features': None, 'max_leaf_nodes': None, 'min_impurity_decrease': 0.0, 'min_samples_leaf': 1, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'monotonic_cst': None, 'random_state': 42, 'splitter': 'best'}"
+        },
+        "Random Forest": {
+            "type": "RandomForestClassifier",
+            "parameters": "{'bootstrap': True, 'ccp_alpha': 0.0, 'class_weight': None, 'criterion': 'gini', 'max_depth': 10, 'max_features': 'sqrt', 'max_leaf_nodes': None, 'max_samples': None, 'min_impurity_decrease': 0.0, 'min_samples_leaf': 1, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'monotonic_cst': None, 'n_estimators': 100, 'n_jobs': -1, 'oob_score': False, 'random_state': 42, 'verbose': 0, 'warm_start': False}"
+        },
+        "SVM": {
+            "type": "SVC",
+            "parameters": "{'C': 1.0, 'break_ties': False, 'cache_size': 200, 'class_weight': None, 'coef0': 0.0, 'decision_function_shape': 'ovr', 'degree': 3, 'gamma': 'scale', 'kernel': 'rbf', 'max_iter': -1, 'probability': True, 'random_state': 42, 'shrinking': True, 'tol': 0.001, 'verbose': False}"
+        },
+        "Naive Bayes": {
+            "type": "GaussianNB",
+            "parameters": "{'priors': None, 'var_smoothing': 1e-09}"
+        },
+        "Gradient Boosting": {
+            "type": "GradientBoostingClassifier",
+            "parameters": "{'ccp_alpha': 0.0, 'criterion': 'friedman_mse', 'init': None, 'learning_rate': 0.1, 'loss': 'log_loss', 'max_depth': 3, 'max_features': None, 'max_leaf_nodes': None, 'min_impurity_decrease': 0.0, 'min_samples_leaf': 1, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'n_estimators': 100, 'n_iter_no_change': None, 'random_state': 42, 'subsample': 1.0, 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': 0, 'warm_start': False}"
+        },
+        "AdaBoost": {
+            "type": "AdaBoostClassifier",
+            "parameters": "{'algorithm': 'deprecated', 'estimator': None, 'learning_rate': 1.0, 'n_estimators': 50, 'random_state': 42}"
+        },
+        "Neural Network": {
+            "type": "MLPClassifier",
+            "parameters": "{'activation': 'relu', 'alpha': 0.0001, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (100, 50), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 42, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}"
+        },
+        "Random Forest (Tuned)": {
+            "type": "RandomForestClassifier",
+            "parameters": "{'bootstrap': True, 'ccp_alpha': 0.0, 'class_weight': None, 'criterion': 'gini', 'max_depth': 5, 'max_features': 'sqrt', 'max_leaf_nodes': None, 'max_samples': None, 'min_impurity_decrease': 0.0, 'min_samples_leaf': 1, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'monotonic_cst': None, 'n_estimators': 50, 'n_jobs': -1, 'oob_score': False, 'random_state': 42, 'verbose': 0, 'warm_start': False}"
+        },
+        "Voting Classifier": {
+            "type": "VotingClassifier",
+            "parameters": "{'estimators': [('Logistic Regression', LogisticRegression(max_iter=1000, random_state=42)), ('KNN', KNeighborsClassifier()), ('SVM', SVC(probability=True, random_state=42))], 'flatten_transform': True, 'n_jobs': None, 'verbose': False, 'voting': 'soft', 'weights': None, 'Logistic Regression': LogisticRegression(max_iter=1000, random_state=42), 'KNN': KNeighborsClassifier(), 'SVM': SVC(probability=True, random_state=42), 'Logistic Regression__C': 1.0, 'Logistic Regression__class_weight': None, 'Logistic Regression__dual': False, 'Logistic Regression__fit_intercept': True, 'Logistic Regression__intercept_scaling': 1, 'Logistic Regression__l1_ratio': None, 'Logistic Regression__max_iter': 1000, 'Logistic Regression__multi_class': 'deprecated', 'Logistic Regression__n_jobs': None, 'Logistic Regression__penalty': 'l2', 'Logistic Regression__random_state': 42, 'Logistic Regression__solver': 'lbfgs', 'Logistic Regression__tol': 0.0001, 'Logistic Regression__verbose': 0, 'Logistic Regression__warm_start': False, 'KNN__algorithm': 'auto', 'KNN__leaf_size': 30, 'KNN__metric': 'minkowski', 'KNN__metric_params': None, 'KNN__n_jobs': None, 'KNN__n_neighbors': 5, 'KNN__p': 2, 'KNN__weights': 'uniform', 'SVM__C': 1.0, 'SVM__break_ties': False, 'SVM__cache_size': 200, 'SVM__class_weight': None, 'SVM__coef0': 0.0, 'SVM__decision_function_shape': 'ovr', 'SVM__degree': 3, 'SVM__gamma': 'scale', 'SVM__kernel': 'rbf', 'SVM__max_iter': -1, 'SVM__probability': True, 'SVM__random_state': 42, 'SVM__shrinking': True, 'SVM__tol': 0.001, 'SVM__verbose': False}"
+        },
+        "Stacking Classifier": {
+            "type": "StackingClassifier",
+            "parameters": "{'cv': 5, 'estimators': [('lr', LogisticRegression(max_iter=1000, random_state=42)), ('rf', RandomForestClassifier(random_state=42)), ('svm', SVC(probability=True, random_state=42))], 'final_estimator__C': 1.0, 'final_estimator__class_weight': None, 'final_estimator__dual': False, 'final_estimator__fit_intercept': True, 'final_estimator__intercept_scaling': 1, 'final_estimator__l1_ratio': None, 'final_estimator__max_iter': 100, 'final_estimator__multi_class': 'deprecated', 'final_estimator__n_jobs': None, 'final_estimator__penalty': 'l2', 'final_estimator__random_state': None, 'final_estimator__solver': 'lbfgs', 'final_estimator__tol': 0.0001, 'final_estimator__verbose': 0, 'final_estimator__warm_start': False, 'final_estimator': LogisticRegression(), 'n_jobs': None, 'passthrough': False, 'stack_method': 'auto', 'verbose': 0, 'lr': LogisticRegression(max_iter=1000, random_state=42), 'rf': RandomForestClassifier(random_state=42), 'svm': SVC(probability=True, random_state=42), 'lr__C': 1.0, 'lr__class_weight': None, 'lr__dual': False, 'lr__fit_intercept': True, 'lr__intercept_scaling': 1, 'lr__l1_ratio': None, 'lr__max_iter': 1000, 'lr__multi_class': 'deprecated', 'lr__n_jobs': None, 'lr__penalty': 'l2', 'lr__random_state': 42, 'lr__solver': 'lbfgs', 'lr__tol': 0.0001, 'lr__verbose': 0, 'lr__warm_start': False, 'rf__bootstrap': True, 'rf__ccp_alpha': 0.0, 'rf__class_weight': None, 'rf__criterion': 'gini', 'rf__max_depth': None, 'rf__max_features': 'sqrt', 'rf__max_leaf_nodes': None, 'rf__max_samples': None, 'rf__min_impurity_decrease': 0.0, 'rf__min_samples_leaf': 1, 'rf__min_samples_split': 2, 'rf__min_weight_fraction_leaf': 0.0, 'rf__monotonic_cst': None, 'rf__n_estimators': 100, 'rf__n_jobs': None, 'rf__oob_score': False, 'rf__random_state': 42, 'rf__verbose': 0, 'rf__warm_start': False, 'svm__C': 1.0, 'svm__break_ties': False, 'svm__cache_size': 200, 'svm__class_weight': None, 'svm__coef0': 0.0, 'svm__decision_function_shape': 'ovr', 'svm__degree': 3, 'svm__gamma': 'scale', 'svm__kernel': 'rbf', 'svm__max_iter': -1, 'svm__probability': True, 'svm__random_state': 42, 'svm__shrinking': True, 'svm__tol': 0.001, 'svm__verbose': False}"
+        }
+    },
+    "training_summary": {
+        "total_samples": 569,
+        "train_samples": 455,
+        "test_samples": 114,
+        "features_count": 30,
+        "class_distribution": {
+            "malignant": 212,
+            "benign": 357
+        }
+    }
+}
