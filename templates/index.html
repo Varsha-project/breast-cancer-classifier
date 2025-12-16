@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Breast Cancer Classifier | Dept of CE, PIET</title>
-    <!-- Bootstrap 5 for styling -->
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
         }
@@ -22,378 +25,163 @@
         }
         .main-card {
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
-            border: none;
-            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             margin-top: -50px;
-            margin-bottom: 2rem;
-        }
-        .feature-slider {
-            width: 100%;
         }
         .result-panel {
             background: #f8f9fa;
             border-radius: 15px;
             padding: 2rem;
-            transition: all 0.3s ease;
         }
-        .malignant {
-            color: #e74c3c;
-            border-left: 5px solid #e74c3c;
-        }
-        .benign {
-            color: #27ae60;
-            border-left: 5px solid #27ae60;
-        }
-        .progress-bar-malignant {
-            background-color: #e74c3c;
-        }
-        .progress-bar-benign {
-            background-color: #27ae60;
-        }
-        .copyright-footer {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            padding: 1.5rem;
-            font-size: 0.9rem;
-            border-top: 3px solid #3498db;
-        }
-        .university-badge {
-            background: linear-gradient(45deg, #1a237e, #283593);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 30px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-        .model-badge {
-            background: linear-gradient(45deg, #1565c0, #42a5f5);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 30px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
+        .malignant { color: #e74c3c; border-left: 5px solid #e74c3c; }
+        .benign { color: #27ae60; border-left: 5px solid #27ae60; }
+        .progress-bar-malignant { background-color: #e74c3c; }
+        .progress-bar-benign { background-color: #27ae60; }
+        .badge-note { font-size: 0.85rem; }
     </style>
 </head>
+
 <body>
-    <!-- Header Section -->
-    <div class="header-bar">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-hospital-alt"></i> Breast Cancer Wisconsin Classifier</h1>
-                    <p class="lead mb-0">A Machine Learning Tool for Diagnostic Assistance</p>
+
+<!-- HEADER -->
+<div class="header-bar">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fas fa-hospital-alt"></i> Breast Cancer Wisconsin Classifier</h1>
+            <p class="lead mb-0">Machine Learning–Based Diagnostic Assistance</p>
+        </div>
+        <span class="badge bg-primary fs-6">
+            <i class="fas fa-university"></i> Dept of CE, PIET Jaipur
+        </span>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="container py-5">
+    <div class="card main-card p-5">
+
+        <!-- INTRO -->
+        <div class="mb-4">
+            <span class="badge bg-info text-dark badge-note">
+                Supervised ML Model · Using 5 of 30 trained features
+            </span>
+            <h2 class="mt-3">Interactive Tumor Analysis</h2>
+            <p class="text-muted">
+                Predictions are based on combined feature patterns, not on individual thresholds.
+            </p>
+            <div class="alert alert-warning">
+                ⚠️ This is an <strong>educational tool</strong>. Predictions are not medical diagnoses.
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- INPUT -->
+            <div class="col-md-7">
+                <h4><i class="fas fa-sliders-h"></i> Input Tumor Features</h4>
+                <div id="featureInputs" class="mt-3 text-muted">
+                    Loading sliders…
                 </div>
-                <div class="col-md-4 text-end">
-                    <div class="university-badge">
-                        <i class="fas fa-university"></i> Dept of CE, PIET, Jaipur
-                    </div>
+
+                <button id="predictBtn" class="btn btn-primary btn-lg w-100 mt-4"
+                        onclick="makePrediction()">
+                    <i class="fas fa-stethoscope"></i> Analyze & Predict
+                </button>
+
+                <div id="loadingSpinner" class="text-center mt-3" style="display:none;">
+                    <div class="spinner-border text-primary"></div>
+                    <p>Analyzing…</p>
                 </div>
             </div>
+
+            <!-- RESULTS -->
+            <div class="col-md-5">
+                <h4><i class="fas fa-chart-line"></i> Prediction Results</h4>
+                <div id="resultPanel" class="result-panel text-center text-muted">
+                    Awaiting analysis…
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-secondary mt-4">
+            📌 <strong>Important:</strong> Model confidence reflects statistical certainty,
+            <em>not</em> clinical certainty.
         </div>
     </div>
+</div>
 
-    <!-- Main Content -->
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="main-card card">
-                    <div class="card-body p-5">
-                        <!-- Introduction -->
-                        <div class="row mb-5">
-                            <div class="col-12">
-                                <div class="model-badge">
-                                    <i class="fas fa-brain"></i> Powered by Supervised ML  Model | 
-                                </div>
-                                <h2 class="mb-3">Interactive Tumor Analysis</h2>
-                                <p class="text-muted">
-                                    This tool uses a trained machine learning model to analyze tumor characteristics based on the Wisconsin Diagnostic Dataset.
-                                    Adjust the sliders below to input cell nucleus measurements and receive a predictive diagnosis.
-                                </p>
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> <strong>Note:</strong> This is an <strong>educational tool</strong> developed for academic purposes. It is not a substitute for professional medical diagnosis.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Input Panel -->
-                            <div class="col-md-7">
-                                <h4 class="mb-4"><i class="fas fa-sliders-h"></i> Input Tumor Features</h4>
-                                
-                                <!-- Feature Inputs will be dynamically inserted here by app.py -->
-                                <div id="featureInputs">
-                                    <p class="text-muted">Loading interactive sliders...</p>
-                                </div>
-
-                                <!-- Action Button -->
-                                <div class="d-grid gap-2 mt-4">
-                                    <button class="btn btn-primary btn-lg" onclick="makePrediction()" id="predictBtn">
-                                        <i class="fas fa-stethoscope"></i> Analyze & Predict Diagnosis
-                                    </button>
-                                </div>
-
-                                <!-- Loading Spinner (Hidden by default) -->
-                                <div class="text-center mt-3" id="loadingSpinner" style="display: none;">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                    <p class="mt-2">Analyzing tumor characteristics...</p>
-                                </div>
-                            </div>
-
-                            <!-- Results Panel -->
-                            <div class="col-md-5">
-                                <h4 class="mb-4"><i class="fas fa-chart-line"></i> Prediction Results</h4>
-                                <div class="result-panel" id="resultPanel">
-                                    <div class="text-center text-muted py-5">
-                                        <i class="fas fa-microscope fa-3x mb-3"></i>
-                                        <h5>Awaiting Analysis</h5>
-                                        <p>Input tumor measurements and click "Analyze" to see the prediction results here.</p>
-                                    </div>
-                                </div>
-
-                                <!-- Feature Importance Chart -->
-                                <div class="mt-4">
-                                    <h5><i class="fas fa-star"></i> Key Predictive Features</h5>
-                                    <p class="small text-muted">Features with highest importance in the model's decision:</p>
-                                    <ul class="list-group list-group-flush" id="featureImportance">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            Mean Radius
-                                            <span class="badge bg-primary rounded-pill">0.18</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            Worst Perimeter
-                                            <span class="badge bg-primary rounded-pill">0.15</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            Mean Concave Points
-                                            <span class="badge bg-primary rounded-pill">0.12</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Technical Details -->
-                        <div class="row mt-5">
-                            <div class="col-12">
-                                <div class="accordion" id="technicalAccordion">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails">
-                                                <i class="fas fa-cogs me-2"></i> Technical & Model Details
-                                            </button>
-                                        </h2>
-                                        <div id="collapseDetails" class="accordion-collapse collapse" data-bs-parent="#technicalAccordion">
-                                            <div class="accordion-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <h6>Model Performance</h6>
-                                                        <ul>
-                                                            <li><strong>Algorithm:</strong> Random Forest Classifier</li>
-                                                            <li><strong>Accuracy:</strong> 96.49% (Test Set)</li>
-                                                            <li><strong>Recall (Sensitivity):</strong> 98.25%</li>
-                                                            <li><strong>Precision:</strong> 96.55%</li>
-                                                            <li><strong>F1-Score:</strong> 0.974</li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <h6>Dataset Information</h6>
-                                                        <ul>
-                                                            <li><strong>Dataset:</strong> Breast Cancer Wisconsin (Diagnostic)</li>
-                                                            <li><strong>Samples:</strong> 569 total cases</li>
-                                                            <li><strong>Features:</strong> 30 numeric attributes</li>
-                                                            <li><strong>Classes:</strong> Malignant (212), Benign (357)</li>
-                                                            <li><strong>Source:</strong> UCI Machine Learning Repository</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- FOOTER -->
+<footer class="bg-dark text-light p-4 mt-5">
+    <div class="container text-center">
+        <p class="mb-1">Academic Project · Department of Computer Engineering</p>
+        <p class="mb-0">
+            © 2024 · Ms. Bersha Kumari, Assistant Professor, PIET Jaipur
+        </p>
     </div>
+</footer>
 
-    <!-- Copyright Footer -->
-    <footer class="copyright-footer mt-auto">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h5><i class="fas fa-graduation-cap"></i> Academic Project</h5>
-                    <p class="mb-0">
-                        Developed as part of a Machine Learning research initiative in the Department of Computer Engineering.
-                        This tool is intended solely for educational and research purposes.
-                    </p>
-                </div>
-                <div class="col-md-4 text-end">
-                    <p class="mb-0">
-                        <strong>Copyright © 2024</strong><br>
-                        <i class="fas fa-user-tie"></i> <strong>Ms. Bersha Kumari</strong><br>
-                        Assistant Professor, Dept of CE<br>
-                        Poornima Institute of Engineering & Technology, Jaipur
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // This function will be called when the page loads to create sliders from the backend data
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/feature_ranges')
-                .then(response => response.json())
-                .then(data => {
-                    const container = document.getElementById('featureInputs');
-                    container.innerHTML = ''; // Clear loading message
-                    
-                    // Create a slider for the first 5 key features for simplicity
-                    const keyFeatures = data.features.slice(0, 5);
-                    
-                    keyFeatures.forEach(feature => {
-                        const div = document.createElement('div');
-                        div.className = 'mb-4';
-                        div.innerHTML = `
-                            <label for="slider_${feature.name}" class="form-label">
-                                <strong>${feature.display_name}</strong>
-                                <span class="float-end text-muted" id="value_${feature.name}">${feature.default.toFixed(2)}</span>
-                            </label>
-                            <input type="range" 
-                                   class="form-range feature-slider" 
-                                   id="slider_${feature.name}" 
-                                   min="${feature.min.toFixed(1)}" 
-                                   max="${feature.max.toFixed(1)}" 
-                                   step="${feature.step}" 
-                                   value="${feature.default}"
-                                   oninput="document.getElementById('value_${feature.name}').textContent = parseFloat(this.value).toFixed(2)">
-                            <div class="d-flex justify-content-between small text-muted">
-                                <span>${feature.min.toFixed(1)} (min)</span>
-                                <span>${feature.max.toFixed(1)} (max)</span>
-                            </div>
-                        `;
-                        container.appendChild(div);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading feature ranges:', error);
-                    document.getElementById('featureInputs').innerHTML = 
-                        '<div class="alert alert-warning">Could not load feature data. Using default values.</div>';
-                });
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/feature_ranges')
+        .then(r => r.json())
+        .then(data => {
+            const container = document.getElementById('featureInputs');
+            container.innerHTML = '';
+            data.features.forEach(f => {
+                container.innerHTML += `
+                <label class="form-label">
+                    <strong>${f.display_name}</strong>
+                    <span id="v_${f.name}" class="float-end">${f.default.toFixed(2)}</span>
+                </label>
+                <input type="range" class="form-range feature-slider"
+                       id="slider_${f.name}" min="${f.min}" max="${f.max}"
+                       step="${f.step}" value="${f.default}"
+                       oninput="document.getElementById('v_${f.name}').innerText=parseFloat(this.value).toFixed(2)">
+                `;
+            });
         });
+});
 
-        // Function to send feature values to backend and display prediction
-        function makePrediction() {
-            const btn = document.getElementById('predictBtn');
-            const spinner = document.getElementById('loadingSpinner');
-            const resultPanel = document.getElementById('resultPanel');
-            
-            // Show loading state
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
-            spinner.style.display = 'block';
-            
-            // Collect values from sliders
-            const inputs = {};
-            const sliders = document.querySelectorAll('.feature-slider');
-            sliders.forEach(slider => {
-                const featureName = slider.id.replace('slider_', '');
-                inputs[featureName] = parseFloat(slider.value);
-            });
-            
-            // Send to backend API
-            fetch('/api/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(inputs)
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Update results panel
-                const isMalignant = data.prediction === 0;
-                const malignantProb = (data.probabilities.malignant * 100).toFixed(1);
-                const benignProb = (data.probabilities.benign * 100).toFixed(1);
-                
-                resultPanel.innerHTML = `
-                    <div class="${isMalignant ? 'malignant' : 'benign'} p-3 rounded">
-                        <h3 class="text-center"><i class="fas fa-${isMalignant ? 'exclamation-triangle' : 'check-circle'}"></i> ${isMalignant ? 'MALIGNANT' : 'BENIGN'}</h3>
-                        <p class="text-center">${isMalignant ? 'Potential cancer detected. Further medical consultation is advised.' : 'Likely non-cancerous. Regular monitoring recommended.'}</p>
-                        
-                        <div class="mt-4">
-                            <h6 class="mb-2">Probability Distribution:</h6>
-                            <div class="progress mb-2" style="height: 25px;">
-                                <div class="progress-bar progress-bar-malignant" role="progressbar" style="width: ${malignantProb}%" 
-                                     aria-valuenow="${malignantProb}" aria-valuemin="0" aria-valuemax="100">
-                                     Malignant: ${malignantProb}%
-                                </div>
-                            </div>
-                            <div class="progress" style="height: 25px;">
-                                <div class="progress-bar progress-bar-benign" role="progressbar" style="width: ${benignProb}%" 
-                                     aria-valuenow="${benignProb}" aria-valuemin="0" aria-valuemax="100">
-                                     Benign: ${benignProb}%
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-4">
-                            <h6><i class="fas fa-chart-bar"></i> Confidence Metrics:</h6>
-                            <div class="row text-center mt-3">
-                                <div class="col">
-                                    <div class="display-6 ${isMalignant ? 'text-danger' : 'text-success'}">${data.confidence.toFixed(1)}%</div>
-                                    <small class="text-muted">Prediction Confidence</small>
-                                </div>
-                                <div class="col">
-                                    <div class="display-6">${malignantProb}%</div>
-                                    <small class="text-muted">Malignant Probability</small>
-                                </div>
-                                <div class="col">
-                                    <div class="display-6">${benignProb}%</div>
-                                    <small class="text-muted">Benign Probability</small>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        ${isMalignant ? 
-                            '<div class="alert alert-danger mt-3"><i class="fas fa-exclamation-circle"></i> <strong>Important:</strong> This prediction suggests potential malignancy. Please consult a healthcare professional for proper diagnosis and treatment.</div>' : 
-                            '<div class="alert alert-success mt-3"><i class="fas fa-heartbeat"></i> <strong>Note:</strong> While this prediction is favorable, regular medical check-ups are always recommended.</div>'
-                        }
-                    </div>
-                `;
-                
-                // Restore button
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-stethoscope"></i> Re-analyze & Predict Diagnosis';
-                spinner.style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                resultPanel.innerHTML = `
-                    <div class="alert alert-danger">
-                        <h5><i class="fas fa-exclamation-triangle"></i> Prediction Error</h5>
-                        <p>Could not get prediction from the server. Please try again.</p>
-                        <p class="small">${error.message}</p>
-                    </div>
-                `;
-                
-                // Restore button
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-stethoscope"></i> Try Again';
-                spinner.style.display = 'none';
-            });
-        }
-    </script>
+function makePrediction() {
+    const btn = document.getElementById('predictBtn');
+    const spinner = document.getElementById('loadingSpinner');
+    const panel = document.getElementById('resultPanel');
+
+    btn.disabled = true;
+    spinner.style.display = 'block';
+
+    const inputs = {};
+    document.querySelectorAll('.feature-slider').forEach(s => {
+        inputs[s.id.replace('slider_', '')] = parseFloat(s.value);
+    });
+
+    fetch('/api/predict', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(inputs)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.error) throw new Error(data.error);
+
+        const malignant = data.prediction === 0;
+        panel.innerHTML = `
+        <div class="${malignant ? 'malignant' : 'benign'} p-3">
+            <h3>${malignant ? 'MALIGNANT' : 'BENIGN'}</h3>
+            <p>Model Confidence: ${data.confidence.toFixed(1)}%</p>
+        </div>`;
+    })
+    .catch(err => {
+        panel.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+    })
+    .finally(() => {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+    });
+}
+</script>
+
 </body>
 </html>
