@@ -9,12 +9,11 @@ import json
 app = Flask(__name__)
 
 # ==================================================
-# Paths (Notebook + Deployment safe)
+# Paths (Render / Local safe)
 # ==================================================
 try:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 except NameError:
-    # Running inside Jupyter Notebook
     BASE_DIR = os.getcwd()
 
 MODEL_DIR = os.path.join(BASE_DIR, "saved_models")
@@ -31,6 +30,8 @@ try:
 
     MODEL_LOADED = True
     print("✅ Model, scaler, and metadata loaded successfully!")
+    print("📌 Model:", METADATA.get("best_model"))
+    print("📌 Features expected:", len(scaler.feature_names_in_))
 
 except Exception as e:
     MODEL_LOADED = False
@@ -45,12 +46,7 @@ FEATURE_INFO = [
     {"name": "mean texture", "display_name": "Mean Texture", "min": 9.0, "max": 40.0, "default": 19.0, "step": 0.1},
     {"name": "mean perimeter", "display_name": "Mean Perimeter", "min": 43.0, "max": 190.0, "default": 92.0, "step": 0.1},
     {"name": "mean area", "display_name": "Mean Area", "min": 143.0, "max": 2500.0, "default": 654.0, "step": 1.0},
-    {"name": "mean smoothness", "display_name": "Mean Smoothness", "min": 0.05, "max": 0.17, "default": 0.10, "step": 0.001},
-    {"name": "mean compactness", "display_name": "Mean Compactness", "min": 0.02, "max": 0.35, "default": 0.09, "step": 0.001},
-    {"name": "mean concavity", "display_name": "Mean Concavity", "min": 0.0, "max": 0.43, "default": 0.09, "step": 0.001},
-    {"name": "mean concave points", "display_name": "Mean Concave Points", "min": 0.0, "max": 0.20, "default": 0.05, "step": 0.001},
-    {"name": "mean symmetry", "display_name": "Mean Symmetry", "min": 0.11, "max": 0.30, "default": 0.18, "step": 0.001},
-    {"name": "mean fractal dimension", "display_name": "Mean Fractal Dimension", "min": 0.05, "max": 0.10, "default": 0.06, "step": 0.001}
+    {"name": "mean smoothness", "display_name": "Mean Smoothness", "min": 0.05, "max": 0.20, "default": 0.10, "step": 0.001}
 ]
 
 # ==================================================
@@ -59,6 +55,14 @@ FEATURE_INFO = [
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/health')
+def health():
+    return jsonify({
+        "status": "ok",
+        "model_loaded": MODEL_LOADED,
+        "timestamp": datetime.now().isoformat()
+    })
 
 @app.route('/api/feature_ranges', methods=['GET'])
 def feature_ranges():
@@ -71,23 +75,30 @@ def feature_ranges():
 @app.route('/api/predict', methods=['POST'])
 def predict():
     if not MODEL_LOADED:
-        return jsonify({"error": "Model not loaded"}), 503
+        return jsonify({
+            "error": "Model not loaded",
+            "prediction": None,
+            "prediction_label": None,
+            "probabilities": {"malignant": 0.0, "benign": 0.0},
+            "confidence": 0.0
+        }), 503
 
     try:
-        data = request.json
+        data = request.json or {}
 
-        # Create input dataframe with correct feature order
+        # 🔥 CRITICAL FIX: use training mean for missing features
         input_df = pd.DataFrame(
-            np.zeros((1, len(scaler.feature_names_in_))),
+            [scaler.mean_],
             columns=scaler.feature_names_in_
         )
 
+        # Update with provided values
         for feature, value in data.items():
             if feature in input_df.columns:
                 input_df.at[0, feature] = float(value)
 
+        # Scale & predict
         input_scaled = scaler.transform(input_df)
-
         prediction = int(model.predict(input_scaled)[0])
         probabilities = model.predict_proba(input_scaled)[0]
 
@@ -103,7 +114,13 @@ def predict():
         })
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({
+            "error": str(e),
+            "prediction": None,
+            "prediction_label": None,
+            "probabilities": {"malignant": 0.0, "benign": 0.0},
+            "confidence": 0.0
+        }), 400
 
 @app.route('/api/model_info', methods=['GET'])
 def model_info():
@@ -121,7 +138,7 @@ def model_info():
     })
 
 # ==================================================
-# Local run only (ignored by Render / Gunicorn)
+# Local run (ignored by Gunicorn / Render)
 # ==================================================
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
