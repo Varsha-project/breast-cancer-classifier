@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # Load the trained model and scaler
 try:
-    model = joblib.load('saved_models/best_model_Random_Forest.pkl')
+    model = joblib.load('saved_models/best_model_Logistic_Regression.pkl')
     scaler = joblib.load('saved_models/scaler.pkl')
     MODEL_LOADED = True
     print("✅ Model and scaler loaded successfully!")
